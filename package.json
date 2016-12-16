@@ -1,0 +1,35 @@
+{
+  "name": "easy-com-client",
+  "version": "0.0.1",
+  "description": "Client to use easy-com server",
+  "main": "lib/Client.js",
+  "scripts": {
+    "build": "webpack --mode=build",
+    "dev": "webpack --progress --colors --watch --mode=dev",
+    "test": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
+  },
+  "devDependencies": {
+    "babel": "6.3.13",
+    "babel-core": "6.1.18",
+    "babel-loader": "6.1.0",
+    "babel-plugin-add-module-exports": "0.1.2",
+    "babel-preset-es2015": "6.3.13",
+    "chai": "3.4.1",
+    "json-loader": "^0.5.4",
+    "mocha": "2.3.4",
+    "webpack": "1.12.9",
+    "yargs": "3.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "easy-com",
+    "websocket",
+    "real time",
+    "client"
+  ],
+  "author": "Gauthier de Girodon Pralong",
+  "license": "MIT"
+}

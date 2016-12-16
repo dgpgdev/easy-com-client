@@ -1,0 +1,120 @@
+import Emitter from 'events'
+
+/**
+ * Client class to communicate with easy-com server
+ */
+export default class Client extends Emitter.EventEmitter {
+
+	/**
+	 * [uri description]
+	 * @type {String}
+	 */
+	constructor(uri = '', opt = {}) {
+		super()
+		this._uri = uri
+		this._reconnect = opt.reconnect || false;
+		this._currentAttempt = 0;
+		this._attempt = opt.attempt || 0;
+		this._delay = opt.delay || 1000;
+		this._interval = 0;
+	}
+
+	/**
+	 * call method to websocket server
+	 */
+	invoke(...args) {
+		this._ws.send(JSON.stringify(args))
+	}
+
+	/**
+	 * initialize all listeners
+	 */
+	initListeners() {
+		/**
+		 * parse data received by server
+		 * @method onmessage
+		 * @param  {Array}  evt a string who represent array data sent by server
+		 */
+		this._ws.onmessage = (evt) => {
+			this.emit.apply(this, JSON.parse(evt.data));
+		}
+
+		/**
+		 * [onopen description]
+		 * @method onopen
+		 * @param  {[type]} evt [description]
+		 * @return {[type]}     [description]
+		 */
+		this._ws.onopen = (evt) => {
+			clearInterval(this._interval);
+			this._currentAttempt = 0;
+			this.emit('open', evt);
+		}
+
+		/**
+		 * [onerror description]
+		 * @method onerror
+		 * @param  {[type]} evt [description]
+		 * @return {[type]}     [description]
+		 */
+		this._ws.onerror = (evt) => {
+			this.emit('error', evt);
+		}
+
+		/**
+		 * [onclose description]
+		 * @method onclose
+		 * @param  {[type]} evt [description]
+		 * @return {[type]}     [description]
+		 */
+		this._ws.onclose = (evt) => {
+			this.emit('close', evt);
+			if (this._reconnect) {
+				this._interval = setInterval(this.reconnect, this._delay, this)
+			}
+		}
+	}
+
+
+	/**
+	 * Called when reconnect option is true.
+	 * Dispatch attempt event when the websocket try to connect.
+	 */
+	reconnect(scope) {
+		if (scope._ws.readyState === 3) {
+			if (scope._currentAttempt === scope._attempt && scope._attempt != 0) {
+				clearInterval(scope._interval);
+				scope.emit('max_attempt', {
+					'attempt': scope._currentAttempt,
+					max_attempt: scope._attempt
+				});
+			} else {
+				scope._currentAttempt += 1;
+				scope.emit('attempt', {
+					'attempt': scope._currentAttempt,
+					max_attempt: scope._attempt
+				});
+				scope._ws = new WebSocket(scope._uri);
+			}
+		}
+	}
+
+	/**
+	 * Close the websocket
+	 */
+	close() {
+		this._reconnect = false;
+		this._ws.close();
+	}
+
+	/**
+	 * Connect the websocket
+	 */
+	connect() {
+		this._ws = new WebSocket(this._uri);
+		this.initListeners();
+	}
+
+
+
+}
