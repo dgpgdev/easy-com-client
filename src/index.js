@@ -59,7 +59,9 @@ export default class Client extends Emitter.EventEmitter {
 		 */
 		this._ws.onerror = (evt) => {
 			this.emit('error', evt);
+
 		}
+
 
 		/**
 		 * [onclose description]
@@ -70,7 +72,7 @@ export default class Client extends Emitter.EventEmitter {
 		this._ws.onclose = (evt) => {
 			this.emit('close', evt);
 			if (this._reconnect) {
-				this._interval = setInterval(this.reconnect, this._delay, this)
+				this._interval = setTimeout(this.reconnect, this._delay, this)
 			}
 		}
 	}
@@ -94,7 +96,9 @@ export default class Client extends Emitter.EventEmitter {
 					'attempt': scope._currentAttempt,
 					max_attempt: scope._attempt
 				});
-				scope._ws = new WebSocket(scope._uri);
+				//scope._ws = new WebSocket(scope._uri);
+			//	scope._ws.close();
+				scope.connect()
 			}
 		}
 	}
