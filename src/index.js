@@ -96,8 +96,6 @@ export default class Client extends Emitter.EventEmitter {
 					'attempt': scope._currentAttempt,
 					max_attempt: scope._attempt
 				});
-				//scope._ws = new WebSocket(scope._uri);
-			//	scope._ws.close();
 				scope.connect()
 			}
 		}
