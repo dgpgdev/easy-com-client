@@ -1,9 +1,19 @@
 {
-  "name": "easy-com-client",
-  "version": "1.0.0",
-  "description": "simple client to communicate with easy-com websocket server",
-  "main": "src/index.js",
-  "repository": "git@github.com:dgpgdev/easy-com-client.git",
-  "author": "Gauthier de Girodon Pralong",
-  "license": "MIT"
+	"name": "easy-com-client",
+	"version": "1.0.0",
+	"description": "simple client to communicate with easy-com websocket server",
+	"main": "lib/EasyComClient.js",
+	"repository": "git@github.com:dgpgdev/easy-com-client.git",
+	"author": "Gauthier de Girodon Pralong",
+	"license": "MIT",
+	"scripts": {
+		"build": "BABEL_ENV=production babel src -d lib --watch"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.4",
+		"babel-preset-env": "^1.6.1",
+		"babel-preset-minify": "^0.3.0"
+	}
 }
