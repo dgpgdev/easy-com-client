@@ -70,6 +70,8 @@ class EasyComClient extends Emitter.EventEmitter {
 			this.emit('close', evt)
 			if (this._reconnect) {
 				this._interval = setTimeout(this.reconnect, this._delay, this)
+			}else{
+				this.emit('disconnect', evt)
 			}
 		}
 	}
